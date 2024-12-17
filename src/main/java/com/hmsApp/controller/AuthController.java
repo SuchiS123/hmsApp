@@ -1,14 +1,17 @@
 package com.hmsApp.controller;
 
 
+import com.hmsApp.entity.User;
 import com.hmsApp.payload.JwtToken;
 import com.hmsApp.payload.LoginDto;
+import com.hmsApp.payload.ProfileDto;
 import com.hmsApp.payload.UserDto;
 import com.hmsApp.repository.UserRepository;
 import com.hmsApp.service.UserService;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -61,6 +64,16 @@ public class AuthController {
             return new ResponseEntity<>(jwtToken,HttpStatus.OK);
         }
         return new ResponseEntity<>("Invalid login and Username or Password",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/user/profile")
+    public ResponseEntity<ProfileDto> getUserProfile(@AuthenticationPrincipal User user)
+    {
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setUsername(user.getUsername());
+        profileDto.setEmail(user.getEmail());
+        profileDto.setName(user.getName());
+        return new ResponseEntity<>(profileDto, HttpStatus.OK);
     }
 
 
