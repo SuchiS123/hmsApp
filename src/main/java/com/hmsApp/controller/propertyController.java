@@ -70,4 +70,17 @@ public class propertyController {
         List<PropertyDto> propertyDtos = propertyService.getAllProperties(searchParamCity);
         return new ResponseEntity<>(propertyDtos, HttpStatus.OK);
     }
+
+    @PutMapping("/updateProperty/{id}/{country}/{city}")
+    public ResponseEntity<PropertyDto> updateProperty(@PathVariable Long id,
+                                                      @RequestBody PropertyDto propertyDto,
+                                                      @PathVariable String country,
+                                                      @PathVariable String city)
+    {
+        PropertyDto savedPropertyDto = propertyService.updateProperty(id, propertyDto, country,city);
+        return new ResponseEntity<>(savedPropertyDto, HttpStatus.OK);
+
+
+    }
 }
+

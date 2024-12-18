@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,5 +74,37 @@ public class PropertyService {
         return propertiesDto;
 
 
+    }
+
+
+    public PropertyDto updateProperty(Long id, PropertyDto propertyDto,String country,String city) {
+        Property property = propertyRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFound("Property not found: " + id));
+
+        Country country1 = countryRepository.findByCountryName(country).
+                orElseThrow(() -> new ResourceNotFound("Country not found: " + country));
+
+        City city1=cityRepository.findByCityName(city).orElseThrow(
+                () -> new ResourceNotFound("Country not found: " + city)
+        );
+
+
+
+        // Update the fields of the entity using the data from DTO
+        property.setName(propertyDto.getName());
+        property.setNoOfGuest(propertyDto.getNoOfGuest());
+        property.setNoOfBedrooms(propertyDto.getNoOfBedrooms());
+        property.setNoOfBathrooms(propertyDto.getNoOfBathrooms());
+        property.setCity(propertyDto.getCity());
+        property.setCountry(propertyDto.getCountry());
+
+        property.setCity(city1);
+        property.setCountry(country1);
+
+        // Save the updated entity back to the database
+        Property updatedProperty = propertyRepository.save(property);
+
+        // Map the updated entity to DTO and return
+        return mapToDto(updatedProperty);
     }
 }

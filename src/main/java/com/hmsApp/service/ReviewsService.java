@@ -25,14 +25,20 @@ public class ReviewsService {
         this.modelMapper = modelMapper;
     }
 
-    public ReviewsDto addReview(ReviewsDto reviewsDto, Long propertyId, User user) {
+    public String addReview(ReviewsDto reviewsDto, Long propertyId, User user) {
         Property property = propertyRepository.findById(propertyId).get();
-        Reviews reviews = mapToEntity(reviewsDto);
-        reviews.setProperty(property);
-        reviews.setUser(user);
-        Reviews savedReview = reviewsRepository.save(reviews);
-        ReviewsDto reviewsDto1 = mapToDto(savedReview);
-        return reviewsDto1;
+        Reviews reviewsStatus = reviewsRepository.findByPropertyAndUser(property, user);
+        if (reviewsStatus != null) {
+
+
+            Reviews reviews = mapToEntity(reviewsDto);
+            reviews.setProperty(property);
+            reviews.setUser(user);
+            Reviews savedReview = reviewsRepository.save(reviews);
+            ReviewsDto reviewsDto1 = mapToDto(savedReview);
+            return "added review";
+        }
+       return "Review alredy given";
 
     }
 

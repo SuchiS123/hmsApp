@@ -27,7 +27,7 @@ public class ReviewController {
                                            @RequestParam Long propertyId, @AuthenticationPrincipal User user)
     {
 
-        ReviewsDto reviewsDto1 = reviewsService.addReview(reviewsDto, propertyId, user);
+      String reviewsDto1 = reviewsService.addReview(reviewsDto, propertyId, user);
         return ResponseEntity.ok("Review added successfully");
 
     }
