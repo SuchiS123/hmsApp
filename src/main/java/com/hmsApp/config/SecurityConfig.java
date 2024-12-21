@@ -31,7 +31,7 @@ public class SecurityConfig {
                 "/api/v1/country/add/country","/api/v1/property/{searchParam}")
                 .permitAll().
                 requestMatchers("/api/v1/property/addProperty","/api/v1/property/addProperty/{country}/{city}",
-                "/api/v1/property/updateProperty/{id}/{country}/{city}")
+                "/api/v1/property/updateProperty/{id}/{country}/{city}","/api/v1/images/upload/file/{bucketName}/property/{propertyId}")
                 .hasRole("OWNER")
                 .requestMatchers("/api/v1/property/deleteProperty","/api/v1/property/deleteProperty/{name}",
                         "/api/v1/property/deletePropertyByCity/{cityId}")
