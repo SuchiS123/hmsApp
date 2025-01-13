@@ -23,12 +23,20 @@ public class ReviewController {
 
     //after login throught jwt token then use postmapping for review
     @PostMapping
-    public ResponseEntity<String> addReview(@RequestBody ReviewsDto reviewsDto,
+    public ResponseEntity<?> addReview(@RequestBody ReviewsDto reviewsDto,
                                            @RequestParam Long propertyId, @AuthenticationPrincipal User user)
     {
 
-      String reviewsDto1 = reviewsService.addReview(reviewsDto, propertyId, user);
-        return ResponseEntity.ok("Review added successfully");
+      ResponseEntity<?> reviewsDto1 = reviewsService.addReview(reviewsDto, propertyId, user);
+
+      if(reviewsDto1!=null){
+        return new ResponseEntity<>(reviewsDto1,HttpStatus.OK);
+
+          }
+      else {
+          return new ResponseEntity<>("Review not added / Already Exist",HttpStatus.INTERNAL_SERVER_ERROR);
+
+      }
 
     }
 

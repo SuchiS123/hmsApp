@@ -44,5 +44,10 @@ public class CountryService {
             CountryDto countryDto=modelMapper.map(country, CountryDto.class);
             return countryDto;
         }
+
+    public void deleteByCountry(String country) {
+        countryRepository.findByCountryName(country);
+
     }
+}
 

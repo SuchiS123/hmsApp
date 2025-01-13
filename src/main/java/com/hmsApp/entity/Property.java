@@ -36,6 +36,8 @@ public class Property {
     @JoinColumn(name = "country_id")
     private Country country;
 
+
+
 }
 
 

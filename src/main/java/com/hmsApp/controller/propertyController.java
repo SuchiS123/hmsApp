@@ -2,9 +2,12 @@ package com.hmsApp.controller;
 
 import com.hmsApp.entity.Country;
 import com.hmsApp.entity.Property;
+import com.hmsApp.entity.PropertyImage;
 import com.hmsApp.payload.PropertyDto;
 import com.hmsApp.repository.CountryRepository;
+import com.hmsApp.repository.PropertyImageRepository;
 import com.hmsApp.repository.PropertyRepository;
+import com.hmsApp.service.BucketService;
 import com.hmsApp.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,13 +25,19 @@ import java.util.List;
 public class propertyController {
     private PropertyService propertyService;
     private PropertyRepository propertyRepository;
+    private BucketService bucketService;
+    private PropertyImageRepository propertyImageRepository;
 
 
     public propertyController(PropertyService propertyService,
-                              PropertyRepository propertyRepository)
+                              PropertyRepository propertyRepository,
+                              BucketService bucketService,
+                              PropertyImageRepository propertyImageRepository)
     {
         this.propertyService = propertyService;
         this.propertyRepository = propertyRepository;
+        this.bucketService = bucketService;
+        this.propertyImageRepository = propertyImageRepository;
 
     }
 
@@ -81,6 +91,31 @@ public class propertyController {
         return new ResponseEntity<>(savedPropertyDto, HttpStatus.OK);
 
 
+    }
+
+    // add property photo to mysql database
+
+    @PostMapping("/upload/photos/{bucketName}/{propertyId}")
+    public String uploadPropertyPhotos(@RequestParam MultipartFile file,
+                                       @PathVariable String bucketName,
+                                       @PathVariable long propertyId) throws IllegalAccessException {
+        String imageUrl=bucketService.uploadFile(file,bucketName);
+        PropertyImage propertyImage= new PropertyImage();
+        propertyImage.setUrl(imageUrl);
+        Property property = propertyRepository.findById(propertyId).orElseThrow
+                (() -> new RuntimeException("Could not find property "));
+        propertyImage.setProperty(property);
+        propertyImageRepository.save(propertyImage);
+        return "Image is Uploaded";
+    }
+
+    @GetMapping("/get/property/images")
+    public List<PropertyImage> getPropertyImages(@RequestParam long propertyId) {
+        Property property = propertyRepository.findById(propertyId).orElseThrow(() ->
+                new RuntimeException(" Property not found for property " + propertyId));
+        List<PropertyImage> byProperty = propertyImageRepository.findByProperty(property);
+
+        return  byProperty;
     }
 }
 

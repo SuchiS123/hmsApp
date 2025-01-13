@@ -15,9 +15,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByCityId(Long cityId);
 //    jpql query to search  for properties based on city and country
     @Query("select p from Property p JOIN p.city c JOIN p.country co where c.cityName=:searchParam or co.countryName=:searchParam")
-    List<Property> searchProperty(
-            @Param("searchParam") String cityFromLink
-    );
+    List<Property> searchProperty(@Param("searchParam")  String cityFromLink);
 
 
 }

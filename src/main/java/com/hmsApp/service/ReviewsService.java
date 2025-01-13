@@ -7,6 +7,8 @@ import com.hmsApp.payload.ReviewsDto;
 import com.hmsApp.repository.PropertyRepository;
 import com.hmsApp.repository.ReviewsRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +27,10 @@ public class ReviewsService {
         this.modelMapper = modelMapper;
     }
 
-    public String addReview(ReviewsDto reviewsDto, Long propertyId, User user) {
+    public ResponseEntity<?> addReview(ReviewsDto reviewsDto, Long propertyId, User user) {
         Property property = propertyRepository.findById(propertyId).get();
         Reviews reviewsStatus = reviewsRepository.findByPropertyAndUser(property, user);
-        if (reviewsStatus != null) {
+        if (reviewsStatus == null) {
 
 
             Reviews reviews = mapToEntity(reviewsDto);
@@ -36,10 +38,10 @@ public class ReviewsService {
             reviews.setUser(user);
             Reviews savedReview = reviewsRepository.save(reviews);
             ReviewsDto reviewsDto1 = mapToDto(savedReview);
-            return "added review";
+            return new ResponseEntity<>(reviewsDto1, HttpStatus.OK);
         }
-       return "Review alredy given";
 
+        return null;
     }
 
 
