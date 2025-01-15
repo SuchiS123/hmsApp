@@ -28,7 +28,8 @@ public class SecurityConfig {
 
 //        http.authorizeHttpRequests().anyRequest().permitAll();  //haap
         http.authorizeHttpRequests().requestMatchers("/api/auth/sign-up","/api/auth/login","/api/auth/property/sign-up","/api/v1/city/add/city",
-                "/api/v1/country/add/country","/api/v1/property/{searchParam}","/api/v1/property/get/property/images","/api/v1/rooms/search/rooms")
+                "/api/v1/country/add/country","/api/v1/property/{searchParam}","/api/v1/property/get/property/images","/api/v1/rooms/search/rooms",
+                        "/api/auth/otp/send","/api/auth/otp/verify")
                 .permitAll().
                 requestMatchers("/api/v1/property/addProperty","/api/v1/property/addProperty/{country}/{city}",
                 "/api/v1/property/updateProperty/{id}/{country}/{city}","/api/v1/images/upload/file/{bucketName}/property/{propertyId}")

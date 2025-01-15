@@ -18,11 +18,14 @@ public class UserService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private JWTService jwtService;
+    private OTPServiceHandler otpServiceHandler;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, JWTService jwtService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, JWTService jwtService,
+                       OTPServiceHandler otpServiceHandler) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.otpServiceHandler = otpServiceHandler;
     }
 
     public ResponseEntity<?> createUser(UserDto userdto) {
@@ -122,8 +125,14 @@ public class UserService {
 //    verify username and password to login
     public String verifyLogin(LoginDto loginDto) {
 
+        boolean isOtpValid = otpServiceHandler.verifyOtp(loginDto.getOtp()); // Assuming LoginDto has an otp field
+        if (!isOtpValid) {
+            throw new IllegalArgumentException("Invalid OTP");
+        }
+
 //        The error occurs because userRepository.findByUsername()
 //        is written to return an Optional<User>, not an Optional<UserDto>.
+
 
         Optional<User> opUsername = userRepository.findByUsername(loginDto.getUsername());
         if (opUsername.isPresent()) {

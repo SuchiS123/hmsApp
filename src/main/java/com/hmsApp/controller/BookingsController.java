@@ -94,7 +94,7 @@ public class BookingsController {
                 }
 
 
-                twilioService.sendSms("+919827773965", "+12317973211", "Your Booking Confirmed" +
+                twilioService.sendSms("+919827773965", "Your Booking Confirmed" +
                         "Your Booking Id is :" + savedBookings.getId());
                 twilioWhatsAppService.sendWhatsAppMessage("+919827773965", "Your Booking Confirmed" + "Your Booking Id is :" + savedBookings.getId());
 
